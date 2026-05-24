@@ -1,58 +1,347 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# LASU Marketplace
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A verified campus e-commerce platform for Lagos State University (LASU) students and entrepreneurs. Built with Laravel 13, Bootstrap 5, and Paystack.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Table of Contents
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Database Setup](#database-setup)
+- [Running the App](#running-the-app)
+- [Sample Accounts](#sample-accounts)
+- [Features by Role](#features-by-role)
+- [Project Structure](#project-structure)
+- [Common Commands](#common-commands)
+- [Troubleshooting](#troubleshooting)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Requirements
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Make sure you have the following installed before you begin:
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Tool | Minimum Version |
+|------|----------------|
+| PHP | 8.2+ |
+| Composer | 2.x |
+| MySQL | 8.0+ |
+| Node.js | 18+ |
+| NPM | 9+ |
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+---
 
-## Agentic Development
+## Installation
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### 1. Clone the repository
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/your-username/lasu-marketplace.git
+cd lasu-marketplace
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 2. Install PHP dependencies
 
-## Contributing
+```bash
+composer install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 3. Install JavaScript dependencies
 
-## Code of Conduct
+```bash
+npm install
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 4. Copy the environment file
 
-## Security Vulnerabilities
+```bash
+cp .env.example .env
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 5. Generate the application key
+
+```bash
+php artisan key:generate
+```
+
+---
+
+## Configuration
+
+Open `.env` and update the following sections:
+
+### Database
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=lasu_marketplace
+DB_USERNAME=root
+DB_PASSWORD=your_password
+```
+
+Create the database in MySQL before running migrations:
+
+```sql
+CREATE DATABASE lasu_marketplace CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+### Mail (Gmail SMTP)
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=yourgmail@gmail.com
+MAIL_PASSWORD=xxxx xxxx xxxx xxxx
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=yourgmail@gmail.com
+MAIL_FROM_NAME="LASU Marketplace"
+```
+
+> The `MAIL_PASSWORD` is a **Google App Password**, not your Gmail password.
+> Generate one at: https://myaccount.google.com/apppasswords
+> (Requires 2-Step Verification to be enabled on your Google account)
+
+### Paystack (for online payments)
+
+```env
+PAYSTACK_PUBLIC_KEY=pk_test_xxxxxxxxxxxxxxxxxxxxxxxx
+PAYSTACK_SECRET_KEY=sk_test_xxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+> Get your test keys from: https://dashboard.paystack.com/#/settings/developer
+
+### Cache & Session (recommended for local development)
+
+```env
+CACHE_STORE=file
+SESSION_DRIVER=file
+```
+
+---
+
+## Database Setup
+
+### Run migrations
+
+```bash
+php artisan migrate
+```
+
+### Seed the database with sample data
+
+```bash
+php artisan db:seed
+```
+
+This creates:
+- 10 campus zones (real LASU locations)
+- 10 product categories
+- 1 admin account
+- 3 seller accounts with stores and listings
+- 2 buyer accounts
+
+### Link storage for image uploads
+
+```bash
+php artisan storage:link
+```
+
+---
+
+## Running the App
+
+### Start the development server
+
+```bash
+php artisan serve
+```
+
+The app will be available at: **http://localhost:8000**
+
+### Build frontend assets (optional, for Vite)
+
+```bash
+npm run dev
+```
+
+---
+
+## Sample Accounts
+
+All sample accounts use the password: **`password`**
+
+### Admin
+
+| Field | Value |
+|-------|-------|
+| Email | admin@lasu.edu.ng |
+| Password | password |
+| Access | Full admin panel at `/admin/dashboard` |
+
+### Sellers
+
+| Name | Email | Store |
+|------|-------|-------|
+| Amara Books | amara@lasu.edu.ng | Amara Books & Stationery |
+| Chidi Tech Store | chidi@lasu.edu.ng | Chidi Tech Hub |
+| Fatima Fashion Hub | fatima@lasu.edu.ng | Fatima's Fashion |
+
+Sellers log in and are redirected to `/seller/dashboard`
+
+### Buyers
+
+| Name | Email |
+|------|-------|
+| Emeka Obi | emeka@lasu.edu.ng |
+| Ngozi Adeyemi | ngozi@lasu.edu.ng |
+
+Buyers log in and are redirected to the homepage
+
+---
+
+## Features by Role
+
+### Buyer
+- Browse and search listings by category, price, and condition
+- Add items to cart and adjust quantities
+- Checkout with cash on meetup or online payment (Paystack)
+- Message sellers directly from any listing
+- Propose, accept, or counter campus meetup locations
+- Track order status from pending through to completion
+- Leave star ratings and reviews after completed orders
+- Report suspicious listings, users, or stores
+
+### Seller
+- Create and manage a storefront with logo and banner
+- Add listings with up to 5 images, pricing, and stock levels
+- Receive and manage customer orders
+- Confirm orders, mark items as handed over
+- Communicate with buyers through the messaging system
+- View dashboard with revenue and order statistics
+
+### Admin
+- View platform-wide stats and activity
+- Verify or suspend seller stores
+- Moderate and remove listings
+- Suspend or activate user accounts
+- Review and resolve abuse reports
+- Manage campus meetup zones (add, edit, delete)
+
+---
+
+## Project Structure
+
+```
+lasu-marketplace/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   ├── Auth/          # Login, Register, Profile
+│   │   │   ├── Buyer/         # Cart, Orders
+│   │   │   ├── Seller/        # Dashboard, Store, Listings, Orders
+│   │   │   ├── Admin/         # Dashboard, Users, Stores, Listings, Reports, Zones
+│   │   │   ├── ConversationController.php
+│   │   │   ├── MeetupProposalController.php
+│   │   │   ├── PaystackController.php
+│   │   │   ├── ReviewController.php
+│   │   │   └── ReportController.php
+│   │   └── Middleware/
+│   │       └── RoleMiddleware.php
+│   ├── Models/                # 15 Eloquent models
+│   └── Notifications/         # 4 database notifications
+├── database/
+│   ├── migrations/            # 16 migration files
+│   └── seeders/               # 5 seeders
+├── resources/views/
+│   ├── layouts/app.blade.php  # Master layout
+│   ├── auth/                  # Login, Register, Profile, Verify
+│   ├── buyer/                 # Cart, Checkout, Orders
+│   ├── seller/                # Dashboard, Store, Listings, Orders
+│   ├── admin/                 # Dashboard, Users, Stores, Listings, Reports, Zones
+│   ├── conversations/         # Inbox, Chat
+│   └── listings/              # Browse, Detail
+└── routes/web.php             # All application routes
+```
+
+---
+
+## Common Commands
+
+```bash
+# Clear all caches
+php artisan optimize:clear
+
+# Re-run migrations from scratch (WARNING: deletes all data)
+php artisan migrate:fresh --seed
+
+# Check registered routes
+php artisan route:list
+
+# Open interactive shell
+php artisan tinker
+
+# Rebuild composer autoloader (fixes class not found errors)
+composer dump-autoload
+
+# Create storage symlink (run once after setup)
+php artisan storage:link
+```
+
+---
+
+## Troubleshooting
+
+### "Class not found" errors
+```bash
+composer dump-autoload
+php artisan optimize:clear
+```
+
+### "Table does not exist" errors
+```bash
+php artisan migrate
+```
+
+### "View not found" errors
+Make sure all blade files are in the correct folder under `resources/views/`. Refer to the project structure above.
+
+### Images not displaying
+```bash
+php artisan storage:link
+```
+Then confirm your `APP_URL` in `.env` matches the URL you are accessing the app on (e.g. `http://localhost:8000`).
+
+### Paystack payments not working
+- Confirm you are using **test keys** for local development
+- Ensure your `APP_URL` is publicly accessible for webhooks (use [ngrok](https://ngrok.com) to expose localhost during testing)
+- Check that the Paystack webhook URL is set to `https://your-domain.com/webhooks/paystack` in your Paystack dashboard
+
+### Mail not sending
+- Confirm 2-Step Verification is enabled on your Gmail account
+- Make sure you generated an **App Password** (not your regular password)
+- Test with: `php artisan tinker` then `Mail::raw('Test', fn($m) => $m->to('test@example.com')->subject('Test'));`
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Backend | Laravel 13 (PHP 8.2+) |
+| Frontend | Blade + Bootstrap 5 + Bootstrap Icons |
+| Database | MySQL 8 |
+| Authentication | Laravel built-in + custom RoleMiddleware |
+| Payments | Paystack API |
+| File Storage | Laravel local disk (public) |
+| Notifications | Laravel database notifications |
+
+---
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project was developed as an undergraduate research project for Lagos State University.
